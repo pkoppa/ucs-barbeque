@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment                 
+metadata:
+  name: ucsbbq-web  
+  namespace: ucsbbq         
+spec:
+  replicas: 3      
+  selector:
+    matchLabels:
+      app: ucsbbq-web
+  template:                      
+    metadata:
+      labels:                    
+        app: ucsbbq-web
+    spec: 
+      imagePullSecrets:
+          - name: docker    
+      containers:
+      - name: ucsbbq-web
+        image: pkoppa/ucsbbq
+        env:
+        - name: MONGO_INIT_USER
+          value: "porxie" #Mongo User with permissions to create additional databases and users. Typically "porxie" or "pds"
+        - name: MONGO_INIT_PASS
+          value: "porxie" #Required to connect the init user to the database. If using the mongodb yaml supplied, use "porxie"
+        - name: MONGO_HOST
+          value: "mongo" #Must be changed for PDS deployments
+        - name: MONGO_PORT
+          value: "27017"
+        - name: MONGO_USER
+          value: porxie #Mongo DB User that will be created by using the Init_User
+        - name: MONGO_PASS
+          value: "porxie" #Mongo DB Password for User that will be created by using the Init User
+        - name: MONGO_TLS
+          value: "" #Leave as an empty set unless using Amazon DocumentDB
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ucsbbq-svc
+  namespace: ucsbbq
+  labels:
+    app: ucsbbq-web
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: NodePort
+  selector:
+    app: ucsbbq-web
+
+
+
+
+
+
+

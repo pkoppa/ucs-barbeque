@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Namespace                 
+metadata:
+  name: ucsbbq
+  labels:
+    pds.portworx.com/available: "true"
+
+---
+
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJkb2NrZXIuaW8iOnsidXNlcm5hbWUiOiJwa29wcGEiLCJwYXNzd29yZCI6IkJvbmQwMDchQCIsImVtYWlsIjoicGtvcHBhQGNpc2NvLmNvbSIsImF1dGgiOiJjR3R2Y0hCaE9rSnZibVF3TURjaFFBPT0ifX19
+kind: Secret
+metadata:
+  name: docker
+  namespace: ucsbbq
